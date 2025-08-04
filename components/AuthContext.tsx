@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       try {
         const loggedIn = await magic.user.isLoggedIn();
         if (loggedIn) {
-          const userData = await magic.user.getMetadata();
+          const userData = await magic.user.getInfo();
           setUser({ email: userData.email });
           setIsLoggedIn(true);
         } else {
@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setIsLoading(true);
       await magic.auth.loginWithMagicLink({ email });
-      const userData = await magic.user.getMetadata();
+      const userData = await magic.user.getInfo();
       setUser({ email: userData.email });
       setIsLoggedIn(true);
     } catch (error) {

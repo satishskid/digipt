@@ -110,7 +110,12 @@ const AppWrapper: React.FC = () => {
 
 const App: React.FC = () => {
     return (
-        <HashRouter>
+        <HashRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true
+          }}
+        >
           <AuthProvider>
             <RoleProvider>
               <ApiKeyProvider>
