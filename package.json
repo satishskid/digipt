@@ -1,24 +1,28 @@
-
 {
   "name": "mindful-parent-guide",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "npx serve -s . -p 4857",
-    "build": "echo 'No build step needed - static ES modules'",
-    "start": "npx serve -s . -p 4857"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "magic-sdk": "^29.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.22.3",
-    "react-markdown": "^9.0.1"
+    "vite": "^7.0.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
-    "typescript": "^5.3.3",
-    "serve": "^14.2.1"
+    "serve": "^14.2.1",
+    "typescript": "^5.3.3"
   }
 }
