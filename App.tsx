@@ -13,6 +13,7 @@ import { FAQ } from './components/FAQ';
 import { ApiKeyProvider } from './components/ApiKeyContext';
 import { AuthProvider, useAuth } from './components/AuthContext';
 import { LoginScreen } from './components/LoginScreen';
+import { MagicTestComponent } from './components/MagicTestComponent';
 
 const MainLayout: React.FC = () => {
   const { role } = useRole();
@@ -120,6 +121,7 @@ const App: React.FC = () => {
             <RoleProvider>
               <ApiKeyProvider>
                 <AppWrapper />
+                <MagicTestComponent />
               </ApiKeyProvider>
             </RoleProvider>
           </AuthProvider>

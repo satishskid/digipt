@@ -1,26 +1,16 @@
 # Netlify configuration for SKIDS PWA
 [build]
-  # No build command needed - this is a static site
-  publish = "."
+  command = "npm run build"
+  publish = "dist"
 
 [[headers]]
   # Apply to all files
   for = "/*"
   [headers.values]
-    # Enable CORS for ES modules
-    Cross-Origin-Embedder-Policy = "credentialless"
-    Cross-Origin-Opener-Policy = "same-origin"
-
-[[headers]]
-  # Apply to TypeScript/JavaScript files  
-  for = "*.tsx"
-  [headers.values]
-    Content-Type = "application/javascript"
-
-[[headers]]
-  for = "*.ts"
-  [headers.values]
-    Content-Type = "application/javascript"
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
 
 # Redirect all routes to index.html for SPA routing
 [[redirects]]

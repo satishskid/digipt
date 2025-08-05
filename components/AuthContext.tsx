@@ -17,6 +17,21 @@ const MAGIC_PUBLISHABLE_KEY = 'pk_live_D423B8C7EB41E595';
 let magic: Magic | null = null;
 if (typeof window !== 'undefined') {
   magic = new Magic(MAGIC_PUBLISHABLE_KEY);
+  // Add to window for debugging
+  (window as any).magic = magic;
+  
+  // Immediate test logging
+  console.log('🔍 MAGIC INITIALIZATION TEST:');
+  console.log('✅ Magic instance created:', magic);
+  console.log('🔧 Magic user methods:', Object.getOwnPropertyNames(magic.user));
+  console.log('🔑 API Key used:', MAGIC_PUBLISHABLE_KEY);
+  
+  // Test basic functionality immediately
+  magic.user.isLoggedIn().then(isLoggedIn => {
+    console.log('✅ isLoggedIn() test result:', isLoggedIn);
+  }).catch(error => {
+    console.error('❌ isLoggedIn() test failed:', error);
+  });
 }
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -27,21 +42,39 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const checkLoginStatus = async () => {
       if (!magic) {
+          console.log('Magic not initialized');
           setIsLoading(false);
           return;
       }
+      
+      console.log('Magic initialized, checking login status...', magic);
+      
       try {
         const loggedIn = await magic.user.isLoggedIn();
+        console.log('User logged in:', loggedIn);
+        
         if (loggedIn) {
-          const userData = await magic.user.getInfo();
-          setUser({ email: userData.email });
-          setIsLoggedIn(true);
+          console.log('Getting user info...');
+          
+          // Try the correct method for the current Magic SDK version
+          try {
+            const userData = await magic.user.getInfo();
+            console.log('✅ getInfo() success:', userData);
+            setUser({ email: userData.email });
+            setIsLoggedIn(true);
+          } catch (infoError) {
+            console.error('❌ getInfo() failed:', infoError);
+            // If getInfo fails, we'll need to handle this case
+            setIsLoggedIn(false);
+            setUser(null);
+          }
         } else {
             setIsLoggedIn(false);
             setUser(null);
         }
       } catch (error) {
         console.error('Error checking login status:', error);
+        console.error('Available magic.user methods:', Object.getOwnPropertyNames(magic.user));
         setIsLoggedIn(false);
         setUser(null);
       } finally {

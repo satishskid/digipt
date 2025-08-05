@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic.link Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; }
+        input { padding: 8px; width: 200px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Magic.link Integration Test</h1>
+    <div id="results"></div>
+    
+    <h2>Test Authentication</h2>
+    <input type="email" id="email" placeholder="Enter your email" />
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="testLogout()">Test Logout</button>
+    
+    <script src="https://cdn.jsdelivr.net/npm/magic-sdk@latest/dist/magic.js"></script>
+    <script>
+        const API_KEY = 'pk_live_D423B8C7EB41E595';
+        let magic = null;
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            document.getElementById('results').appendChild(div);
+            console.log(message);
+        }
+        
+        async function initMagic() {
+            try {
+                addResult('🔧 Initializing Magic.link...', 'info');
+                magic = new Magic(API_KEY);
+                addResult('✅ Magic instance created successfully', 'success');
+                
+                // Test available methods
+                const methods = Object.getOwnPropertyNames(magic.user);
+                addResult(`🔧 Available user methods: ${methods.join(', ')}`, 'info');
+                
+                // Test isLoggedIn
+                const isLoggedIn = await magic.user.isLoggedIn();
+                addResult(`✅ isLoggedIn() works: ${isLoggedIn}`, 'success');
+                
+                if (isLoggedIn) {
+                    try {
+                        const userInfo = await magic.user.getInfo();
+                        addResult(`✅ User info: ${JSON.stringify(userInfo)}`, 'success');
+                    } catch (e) {
+                        addResult(`⚠️ getInfo() failed: ${e.message}`, 'error');
+                    }
+                } else {
+                    addResult('ℹ️ No user logged in (this is normal for first visit)', 'info');
+                }
+                
+                addResult('🎉 Magic.link integration test completed successfully!', 'success');
+                
+            } catch (error) {
+                addResult(`❌ Magic initialization failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                addResult('❌ Please enter an email address', 'error');
+                return;
+            }
+            
+            try {
+                addResult(`🔄 Sending magic link to ${email}...`, 'info');
+                await magic.auth.loginWithMagicLink({ email });
+                addResult('✅ Magic link sent! Check your email.', 'success');
+                
+                // After successful login, get user info
+                const userInfo = await magic.user.getInfo();
+                addResult(`✅ Login successful! User: ${JSON.stringify(userInfo)}`, 'success');
+                
+            } catch (error) {
+                addResult(`❌ Login failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testLogout() {
+            try {
+                await magic.user.logout();
+                addResult('✅ Logout successful', 'success');
+            } catch (error) {
+                addResult(`❌ Logout failed: ${error.message}`, 'error');
+            }
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', initMagic);
+    </script>
+</body>
+</html>
