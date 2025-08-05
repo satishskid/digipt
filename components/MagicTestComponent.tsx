@@ -4,6 +4,13 @@ export const MagicTestComponent: React.FC = () => {
   const [testResult, setTestResult] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Only show in development mode - hide in production
+  const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  
+  if (!isDevelopment) {
+    return null;
+  }
+
   const runMagicTest = async () => {
     setIsLoading(true);
     setTestResult('');
