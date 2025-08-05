@@ -29,16 +29,20 @@ export const MagicTestComponent: React.FC = () => {
       result += '✅ Magic instance found\n';
       result += `📋 Magic version: ${magic.version || 'unknown'}\n`;
       
-      // Test 2: Available methods
+      // Test 2: Domain check
+      result += `🌐 Current domain: ${window.location.origin}\n`;
+      result += `⚠️ Ensure this domain is in Magic.link dashboard\n\n`;
+      
+      // Test 3: Available methods
       const userMethods = Object.getOwnPropertyNames(magic.user);
       result += `🔧 Available user methods: ${userMethods.join(', ')}\n\n`;
       
-      // Test 3: isLoggedIn test
+      // Test 4: isLoggedIn test
       try {
         const isLoggedIn = await magic.user.isLoggedIn();
         result += `✅ isLoggedIn() works: ${isLoggedIn}\n`;
         
-        // Test 4: If logged in, get user info
+        // Test 5: If logged in, get user info
         if (isLoggedIn) {
           try {
             const userInfo = await magic.user.getInfo();
@@ -62,7 +66,7 @@ export const MagicTestComponent: React.FC = () => {
         result += `❌ isLoggedIn() failed: ${(error as Error).message}\n`;
       }
       
-      // Test 5: API key validation (indirect)
+      // Test 6: API key validation (indirect)
       result += '\n🔑 API Key Status:\n';
       try {
         // Try to create a test session (this will validate the API key)
@@ -76,6 +80,13 @@ export const MagicTestComponent: React.FC = () => {
           result += '⚠️ Cannot determine API key validity\n';
         }
       }
+
+      // Test 7: Domain configuration check
+      result += '\n🌐 Domain Configuration:\n';
+      result += 'Required domains in Magic.link dashboard:\n';
+      result += '• https://digiadol.netlify.app\n';
+      result += '• https://legendary-pothos-de8a43.netlify.app\n';
+      result += `• ${window.location.origin} (current)\n`;
       
       setTestResult(result);
       
